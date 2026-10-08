@@ -184,12 +184,21 @@ export function createApp(simulator: TelemetrySimulator = createTelemetrySimulat
 
 const simulator = createTelemetrySimulator();
 const app = createApp(simulator);
-const port = Number(process.env.PORT ?? 3000);
+// const port = Number(process.env.PORT ?? 3000);
+
+// if (process.env.NODE_ENV !== 'test') {
+//   simulator.start();
+//   app.listen(port, () => {
+//     console.log(`Telemetry API listening on http://localhost:${port}`);
+//   });
+// }
+const port = Number(process.env.PORT) || 3000;
 
 if (process.env.NODE_ENV !== 'test') {
   simulator.start();
-  app.listen(port, () => {
-    console.log(`Telemetry API listening on http://localhost:${port}`);
+
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Telemetry API listening on port ${port}`);
   });
 }
 

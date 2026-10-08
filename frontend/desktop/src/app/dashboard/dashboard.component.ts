@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-
-import { DashboardStore } from '../services/dashboard-store.service';
+import { DashboardStore } from '../core/services/dashboard-store.service';
 
 @Component({
   selector: 'app-dashboard',

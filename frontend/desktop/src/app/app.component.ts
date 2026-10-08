@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
-import { DashboardStore } from './services/dashboard-store.service';
+import { DashboardStore } from './core/services/dashboard-store.service';
 
 @Component({
   selector: 'app-root',

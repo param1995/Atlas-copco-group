@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { apiClient, type DashboardSnapshot } from '../../api';
-import { createTelemetryWorkbook } from '../excel-telemetry/excel-export';
-import { LiveTrendChartComponent } from '../live-trend-data/live-trend-chart.component';
+import { apiClient, type DashboardSnapshot } from '../../../api';
+import { createTelemetryWorkbook } from '../../excel-telemetry/excel-export';
+import { LiveTrendChartComponent } from '../../live-trend-data/live-trend-chart.component';
 import {
   buildTelemetryExportTable,
   createTelemetryCsv
-} from '../excel-telemetry/telemetry-export';
-import { DashboardStore } from './dashboard-store.service';
+} from '../../excel-telemetry/telemetry-export';
+// import { DashboardStore } from './dashboard-store.service';
+import { DashboardStore } from '../services/dashboard-store.service';
 
 const dashboardSnapshot: DashboardSnapshot = {
   timestamp: '2026-10-07T12:00:00.000Z',

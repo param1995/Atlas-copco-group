@@ -95,6 +95,8 @@ http://localhost:3000
 
 The Angular application communicates with these endpoints through `/api`. During Angular development, the development proxy forwards `/api` requests to the local backend running on port `3000`.
 
+Using test coverage this commands is used: Atlas-copco-group\frontend\desktop> ng test --code-coverage
+
 ## Architecture
 
 ```text

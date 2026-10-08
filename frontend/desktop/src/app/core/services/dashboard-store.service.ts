@@ -1,6 +1,6 @@
 import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
 
-import { apiClient, type DashboardSnapshot, type TelemetryHistoryEntry } from '../../api';
+import { apiClient, type DashboardSnapshot, type TelemetryHistoryEntry } from '../../../api';
 import type {
   ConditionItem,
   MetricCard,
@@ -11,9 +11,8 @@ import type {
   TrendPoint,
   TrendRow,
   VelocityUnit
-} from '../models/dashboard.models';
-import { createTelemetryCsv, downloadTelemetryFile } from '../excel-telemetry/telemetry-export';
-
+} from '../../models/dashboard.models';
+import { createTelemetryCsv, downloadTelemetryFile } from '../../excel-telemetry/telemetry-export';
 const velocityFactors: Record<VelocityUnit, number> = {
   'mm/s': 1_000,
   'cm/s': 100,
@@ -167,7 +166,7 @@ export class DashboardStore implements OnDestroy {
     this.isExportingExcel = true;
     this.exportMessage = '';
     try {
-      const { createTelemetryWorkbook } = await import('../excel-telemetry/excel-export');
+      const { createTelemetryWorkbook } = await import('../../excel-telemetry/excel-export');
       const workbook = await createTelemetryWorkbook(snapshot);
       downloadTelemetryFile(workbook, 'xlsx');
       this.exportMessage = 'Excel export downloaded.';

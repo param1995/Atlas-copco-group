@@ -1,23 +1,62 @@
 <div class="dashboard-shell">
   <main class="workspace">
-    <section class="overview-header" id="overview" aria-labelledby="page-title">
+
+    <section
+      class="overview-header"
+      id="overview"
+      aria-labelledby="page-title"
+    >
       <div>
         <p class="eyebrow">Plant monitoring</p>
-        <h1 id="page-title">Compressor overview</h1>
-        <p class="page-description">Live operating conditions and recent telemetry.</p>
+
+        <h1 id="page-title">
+          Compressor overview
+        </h1>
+
+        <p class="page-description">
+          Live operating conditions and recent telemetry.
+        </p>
       </div>
 
       <div class="overview-tools">
-        <div class="export-actions" aria-label="Export telemetry data">
-          <button class="secondary-button" type="button" (click)="store.exportCsv()" [disabled]="!canExport">
+
+        <div
+          class="export-actions"
+          aria-label="Export telemetry data"
+        >
+          <button
+            class="secondary-button"
+            type="button"
+            (click)="store.exportCsv()"
+            [disabled]="!canExport"
+          >
             Export CSV
           </button>
-          <button class="secondary-button" type="button" (click)="store.exportExcel()" [disabled]="!canExport">
-            {{ isExportingExcel ? 'Preparing Excel…' : 'Export Excel' }}
+
+          <button
+            class="secondary-button"
+            type="button"
+            (click)="store.exportExcel()"
+            [disabled]="!canExport"
+          >
+            {{
+              isExportingExcel
+                ? 'Preparing Excel…'
+                : 'Export Excel'
+            }}
           </button>
         </div>
-        <p class="export-message" role="status" aria-live="polite">{{ exportMessage }}</p>
+
+        <p
+          class="export-message"
+          role="status"
+          aria-live="polite"
+        >
+          {{ exportMessage }}
+        </p>
+
         <div class="overview-meta">
+
           <span
             class="system-status"
             [class.ok]="systemStatus === 'Healthy' && !isLoading"
@@ -25,9 +64,14 @@
             role="status"
             aria-live="polite"
           >
-            <span class="status-dot" aria-hidden="true"></span>
+            <span
+              class="status-dot"
+              aria-hidden="true"
+            ></span>
+
             {{ statusLabel }}
           </span>
+
           <p class="updated-label">
             @if (updatedAt) {
               Updated at {{ updatedAt }}
@@ -35,136 +79,408 @@
               Waiting for first update
             }
           </p>
+
         </div>
       </div>
     </section>
 
+
+    <!-- Error State -->
     @if (loadError) {
-      <section class="state-panel error-state" role="alert">
+
+      <section
+        class="state-panel error-state"
+        role="alert"
+      >
         <div>
           <h2>Telemetry unavailable</h2>
-          <p>{{ loadError }}</p>
+
+          <p>
+            {{ loadError }}
+          </p>
         </div>
-        <button class="refresh-button" type="button" (click)="store.refreshDashboard()">
+
+        <button
+          class="refresh-button"
+          type="button"
+          (click)="store.refreshDashboard()"
+        >
           Try again
         </button>
       </section>
-    } @else if (isLoading && metrics.length === 0) {
-      <section class="state-panel loading-state" role="status" aria-live="polite">
-        <span class="loading-indicator" aria-hidden="true"></span>
-        <p>Connecting to live telemetry…</p>
-      </section>
-    } @else if (metrics.length === 0) {
-      <section class="state-panel" role="status">
-        <h2>No telemetry available</h2>
-        <p>The backend returned no current measurements.</p>
-      </section>
-    } @else {
-      @if (systemStatus === 'Warning' && warningMetricNames) {
-        <aside class="attention-banner" aria-label="System warning">
-          <span class="attention-mark" aria-hidden="true">!</span>
-          <div class="attention-copy">
-            <strong>Attention required</strong>
-            <p>{{ warningMetricNames }} report warning status.</p>
-          </div>
-          <a routerLink="/trends">Review recent readings</a>
-        </aside>
-      }
 
-      <section class="metrics-section" aria-labelledby="metrics-heading">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Current snapshot</p>
-            <h2 id="metrics-heading">Key measurements</h2>
-          </div>
-          <span class="section-note">{{ metrics.length }} tracked metrics</span>
-        </div>
+    }
 
-        <div class="kpi-grid">
-          @for (metric of metrics; track metric.name) {
-            <article class="metric-card" [class.warning-card]="metric.tone === 'warning'">
-              <div class="metric-head">
-                <h3>{{ metric.name }}</h3>
-                <span class="metric-state" [class.ok]="metric.tone === 'ok'" [class.warning]="metric.tone === 'warning'">
-                  <span class="metric-dot" aria-hidden="true"></span>
-                  {{ metric.status }}
-                </span>
-              </div>
-              <div class="metric-value-row">
-                <strong>{{ metric.value }}</strong>
-                <span>{{ metric.unit }}</span>
-              </div>
-              @if (metric.name === 'Velocity') {
-                <label class="unit-picker">
-                  <span>Display unit</span>
-                  <select aria-label="Velocity display unit" [ngModel]="velocityUnit" (ngModelChange)="store.setVelocityUnit($event)">
-                    @for (unit of velocityUnits; track unit) {
-                      <option [value]="unit">{{ unit }}</option>
-                    }
-                  </select>
-                </label>
-              } @else if (metric.name === 'Pressure') {
-                <label class="unit-picker">
-                  <span>Display unit</span>
-                  <select aria-label="Pressure display unit" [ngModel]="pressureUnit" (ngModelChange)="store.setPressureUnit($event)">
-                    @for (unit of pressureUnits; track unit) {
-                      <option [value]="unit">{{ unit }}</option>
-                    }
-                  </select>
-                </label>
-              } @else if (metric.name === 'Temperature') {
-                <label class="unit-picker">
-                  <span>Display unit</span>
-                  <select aria-label="Temperature display unit" [ngModel]="temperatureUnit" (ngModelChange)="store.setTemperatureUnit($event)">
-                    @for (unit of temperatureUnits; track unit) {
-                      <option [value]="unit">{{ unit }}</option>
-                    }
-                  </select>
-                </label>
-              }
-            </article>
-          }
-        </div>
-      </section>
-      <!-- <a class="secondary-button trends-link" routerLink="/trends">Open live trends</a> -->
-      <section class="detail-grid" aria-label="Operating details">
-        <section class="detail-panel" aria-labelledby="conditions-heading">
-          <div class="panel-heading">
-            <p class="eyebrow">Machine</p>
-            <h2 id="conditions-heading">Operating conditions</h2>
-          </div>
-          <div class="condition-list">
-            @for (item of conditions; track item.label) {
-              <div class="condition-row">
-                <div>
-                  <span class="condition-label">{{ item.label }}</span>
-                  <small>{{ item.detail }}</small>
-                </div>
-                <strong>{{ item.value }}</strong>
-              </div>
-            }
-          </div>
-        </section>
 
-        <section class="detail-panel" aria-labelledby="services-heading">
-          <div class="panel-heading">
-            <p class="eyebrow">Connectivity</p>
-            <h2 id="services-heading">Service status</h2>
-          </div>
-          <div class="service-list">
-            @for (item of services; track item.label) {
-              <div class="service-row">
-                <span>{{ item.label }}</span>
-                <span class="service-state" [class.ok]="item.tone === 'ok'" [class.warning]="item.tone === 'warning'">
-                  <span class="metric-dot" aria-hidden="true"></span>
-                  {{ item.state }}
-                </span>
-              </div>
-            }
-          </div>
-        </section>
+    <!-- Loading State -->
+    @else if (isLoading && metrics.length === 0) {
+
+      <section
+        class="state-panel loading-state"
+        role="status"
+        aria-live="polite"
+      >
+        <span
+          class="loading-indicator"
+          aria-hidden="true"
+        ></span>
+
+        <p>
+          Connecting to live telemetry…
+        </p>
       </section>
 
     }
+
+
+    <!-- Empty State -->
+    @else if (metrics.length === 0) {
+
+      <section
+        class="state-panel"
+        role="status"
+      >
+        <h2>
+          No telemetry available
+        </h2>
+
+        <p>
+          The backend returned no current measurements.
+        </p>
+      </section>
+
+    }
+
+
+    <!-- Dashboard Content -->
+    @else {
+
+      <!-- System Warning -->
+      @if (systemStatus === 'Warning' && warningMetricNames) {
+
+        <aside
+          class="attention-banner"
+          aria-label="System warning"
+        >
+          <span
+            class="attention-mark"
+            aria-hidden="true"
+          >
+            !
+          </span>
+
+          <div class="attention-copy">
+
+            <strong>
+              Attention required
+            </strong>
+
+            <p>
+              {{ warningMetricNames }}
+              report warning status.
+            </p>
+
+          </div>
+
+          <a
+            class="trends-link"
+            routerLink="/trends"
+          >
+            Open live trends
+          </a>
+
+        </aside>
+
+      }
+
+
+      <!-- Metrics -->
+      <section
+        class="metrics-section"
+        aria-labelledby="metrics-heading"
+      >
+
+        <div class="section-heading">
+
+          <div>
+            <p class="eyebrow">
+              Current snapshot
+            </p>
+
+            <h2 id="metrics-heading">
+              Key measurements
+            </h2>
+          </div>
+
+          <span class="section-note">
+            {{ metrics.length }} tracked metrics
+          </span>
+
+        </div>
+
+
+        <div class="kpi-grid">
+
+          @for (metric of metrics; track metric.name) {
+
+            <article
+              class="metric-card"
+              [class.warning-card]="metric.tone === 'warning'"
+            >
+
+              <div class="metric-head">
+
+                <h3>
+                  {{ metric.name }}
+                </h3>
+
+                <span
+                  class="metric-state"
+                  [class.ok]="metric.tone === 'ok'"
+                  [class.warning]="metric.tone === 'warning'"
+                >
+                  <span
+                    class="metric-dot"
+                    aria-hidden="true"
+                  ></span>
+
+                  {{ metric.status }}
+                </span>
+
+              </div>
+
+
+              <div class="metric-value-row">
+
+                <strong>
+                  {{ metric.value }}
+                </strong>
+
+                <span>
+                  {{ metric.unit }}
+                </span>
+
+              </div>
+
+
+              <!-- Velocity Unit -->
+              @if (metric.name === 'Velocity') {
+
+                <label class="unit-picker">
+
+                  <span>
+                    Display unit
+                  </span>
+
+                  <select
+                    aria-label="Velocity display unit"
+                    [ngModel]="velocityUnit"
+                    (ngModelChange)="store.setVelocityUnit($event)"
+                  >
+
+                    @for (unit of velocityUnits; track unit) {
+
+                      <option [value]="unit">
+                        {{ unit }}
+                      </option>
+
+                    }
+
+                  </select>
+
+                </label>
+
+              }
+
+
+              <!-- Pressure Unit -->
+              @else if (metric.name === 'Pressure') {
+
+                <label class="unit-picker">
+
+                  <span>
+                    Display unit
+                  </span>
+
+                  <select
+                    aria-label="Pressure display unit"
+                    [ngModel]="pressureUnit"
+                    (ngModelChange)="store.setPressureUnit($event)"
+                  >
+
+                    @for (unit of pressureUnits; track unit) {
+
+                      <option [value]="unit">
+                        {{ unit }}
+                      </option>
+
+                    }
+
+                  </select>
+
+                </label>
+
+              }
+
+
+              <!-- Temperature Unit -->
+              @else if (metric.name === 'Temperature') {
+
+                <label class="unit-picker">
+
+                  <span>
+                    Display unit
+                  </span>
+
+                  <select
+                    aria-label="Temperature display unit"
+                    [ngModel]="temperatureUnit"
+                    (ngModelChange)="store.setTemperatureUnit($event)"
+                  >
+
+                    @for (
+                      unit of temperatureUnits;
+                      track unit
+                    ) {
+
+                      <option [value]="unit">
+                        {{ unit }}
+                      </option>
+
+                    }
+
+                  </select>
+
+                </label>
+
+              }
+
+            </article>
+
+          }
+
+        </div>
+
+      </section>
+
+
+      <!-- Operating Details -->
+      <section
+        class="detail-grid"
+        aria-label="Operating details"
+      >
+
+        <!-- Operating Conditions -->
+        <section
+          class="detail-panel"
+          aria-labelledby="conditions-heading"
+        >
+
+          <div class="panel-heading">
+
+            <p class="eyebrow">
+              Machine
+            </p>
+
+            <h2 id="conditions-heading">
+              Operating conditions
+            </h2>
+
+          </div>
+
+
+          <div class="condition-list">
+
+            @for (
+              item of conditions;
+              track item.label
+            ) {
+
+              <div class="condition-row">
+
+                <div>
+
+                  <span class="condition-label">
+                    {{ item.label }}
+                  </span>
+
+                  <small>
+                    {{ item.detail }}
+                  </small>
+
+                </div>
+
+                <strong>
+                  {{ item.value }}
+                </strong>
+
+              </div>
+
+            }
+
+          </div>
+
+        </section>
+
+
+        <!-- Service Status -->
+        <section
+          class="detail-panel"
+          aria-labelledby="services-heading"
+        >
+
+          <div class="panel-heading">
+
+            <p class="eyebrow">
+              Connectivity
+            </p>
+
+            <h2 id="services-heading">
+              Service status
+            </h2>
+
+          </div>
+
+
+          <div class="service-list">
+
+            @for (
+              item of services;
+              track item.label
+            ) {
+
+              <div class="service-row">
+
+                <span>
+                  {{ item.label }}
+                </span>
+
+                <span
+                  class="service-state"
+                  [class.ok]="item.tone === 'ok'"
+                  [class.warning]="item.tone === 'warning'"
+                >
+
+                  <span
+                    class="metric-dot"
+                    aria-hidden="true"
+                  ></span>
+
+                  {{ item.state }}
+
+                </span>
+
+              </div>
+
+            }
+
+          </div>
+
+        </section>
+
+      </section>
+
+    }
+
   </main>
 </div>

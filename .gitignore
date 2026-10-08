@@ -1,66 +1,39 @@
-# =========================
-# Node.js
-# =========================
+
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# =========================
-# Angular
-# =========================
 **/dist/
 **/.angular/
 **/.cache/
 **/out-tsc/
 **/coverage/
-
-# =========================
-# Electron
-# =========================
 **/release/
 **/build/
 **/out/
-
-# =========================
-# Environment / Secrets
-# =========================
 .env
 .env.*
 !.env.example
 
-# =========================
-# Logs
-# =========================
 logs/
 *.log
 
-# =========================
-# OS
-# =========================
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# =========================
-# IDE / Editors
-# =========================
 .vscode/
 .idea/
 
-# Keep VS Code shared configuration if needed
 !.vscode/extensions.json
 !.vscode/settings.json
 
-# =========================
-# TypeScript
-# =========================
-*.tsbuildinfo
+.github/agents/
 
-# =========================
-# Temporary files
-# =========================
+.azure/
+
+*.tsbuildinfo
 *.tmp
 *.temp
 *.swp

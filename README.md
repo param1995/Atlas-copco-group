@@ -1,89 +1,198 @@
 # Compressor Operations Dashboard
 
-A local compressor telemetry dashboard built with Angular and Electron, backed by a Node.js/Express API.
+A local compressor telemetry dashboard built with **Angular 19, Electron, Node.js, and Express**, designed to simulate and visualize real-time compressor operational data.
+
+The application provides a desktop-style monitoring experience with live telemetry, historical trends, health monitoring, unit conversion, interactive charts, and CSV/Excel export.
+
+## Project Highlights
+
+- Real-time compressor telemetry simulation with **1-second updates**
+- Angular dashboard with responsive and user-friendly UI
+- Electron desktop application with secure renderer isolation
+- Node.js + Express REST API
+- Live telemetry for:
+  - Velocity
+  - Pressure
+  - Temperature
+  - Flow
+- Historical telemetry with the latest **100 samples**
+- Interactive Chart.js trend charts
+- Zoom, pan, and reset chart controls
+- Light/Dark theme support
+- Local unit conversion without additional API requests
+- CSV and Excel export
+- API health monitoring
+- Angular lazy-loaded Overview and Trends routes
+- Shared root-scoped dashboard state
+- Automated Angular/Jasmine/Karma tests
+- Backend API tests
+- Code coverage reporting
+
+## Technology Stack
+
+### Frontend
+
+- Angular 19
+- TypeScript
+- HTML5
+- SCSS
+- Angular Router
+- Angular Forms
+- Chart.js
+- Chart.js Zoom Plugin
+
+### Desktop
+
+- Electron
+- Context Isolation
+- Preload API
+- Sandboxed renderer
+- Node integration disabled
+
+### Backend
+
+- Node.js
+- Express
+- TypeScript
+- REST API
+
+### Export
+
+- CSV
+- ExcelJS
+
+### Testing
+
+- Jasmine
+- Karma
+- Angular TestBed
+- Backend API tests
+- Code coverage
 
 ## Requirements
 
-- Node.js 22.x (recommended for Angular 19)
+- Node.js 22.x
 - npm
+- Windows/Linux/macOS
+- Git
+
+Node.js 22.x is recommended for the Angular 19 workspace.
+
+## Project Structure
+
+```text
+Atlas-copco-group/
+│
+├── backend/
+│   └── src/
+│       └── index.ts
+│
+├── frontend/
+│   └── desktop/
+│       ├── electron/
+│       │   ├── main
+│       │   ├── preload
+│       │   └── dev launcher
+│       │
+│       └── src/
+│           └── app/
+│               ├── dashboard/
+│               ├── trends/
+│               └── services/
+│
+├── shared/
+│
+├── package.json
+├── package-lock.json
+├── angular.json
+├── tsconfig.json
+├── tsconfig.spec.json
+└── README.md
+```
 
 ## Setup
 
-From the repository root, install all workspace dependencies:
+Clone the repository and install the workspace dependencies:
 
 ```bash
+git clone https://github.com/param1995/Atlas-copco-group.git
+
+cd Atlas-copco-group
+
 npm install
 ```
 
-Start the backend in one terminal:
+## Start Backend
+
+Start the Node.js/Express API in one terminal:
 
 ```bash
-run : npm run dev 
-or
+npm run dev
+```
+
+Or:
+
+```bash
 npm --prefix backend run dev
 ```
 
-Start the Angular renderer in an Electron window in another terminal:
+The backend runs on:
+
+```text
+http://localhost:3000
+```
+
+## Start Angular + Electron
+
+In another terminal:
 
 ```bash
 npm --prefix frontend/desktop start
 ```
 
-The backend listens on `http://localhost:3000`; the Angular development server listens on `http://127.0.0.1:4200`. The Electron development launcher starts Angular and opens its URL. The backend must be started separately.
+The Angular development server runs on:
 
-To run the renderer in a browser instead, keep the backend running and use:
+```text
+http://127.0.0.1:4200
+```
+
+The Electron development launcher starts the Angular application and opens it inside an Electron window.
+
+> The backend must be started separately.
+
+## Run in Browser
+
+To run the Angular renderer directly in a browser:
 
 ```bash
 npm --prefix frontend/desktop run start:web
 ```
 
-Then open `http://127.0.0.1:4200`.
+Then open:
 
-## Build And Test
-
-Build the backend and Angular renderer:
-
-```bash
-npm run build
+```text
+http://127.0.0.1:4200
 ```
 
-Run backend tests:
+Make sure the backend is running before opening the application.
 
-```bash
-npm run test:api
-```
+## Backend API
 
-Run desktop tests once:
-
-```bash
-npm --prefix frontend/desktop test -- --watch=false
-```
-
-To build Angular and open the build in Electron, start the backend and run:
-
-```bash
-npm --prefix frontend/desktop run electron:preview
-```
-
-This preview command does not create a packaged installer.
-
-## Backend API Endpoints
-
-The backend API runs locally on port `3000`.
+The backend provides two REST endpoints.
 
 ### Dashboard API
 
 Returns the current compressor telemetry snapshot and historical samples.
 
-```text
+```http
 GET http://localhost:3000/api/dashboard
 ```
 
 ### Health API
 
-Checks whether the backend API is running.
+Checks whether the backend API is available.
 
-```text
+```http
 GET http://localhost:3000/api/health
 ```
 
@@ -93,41 +202,357 @@ GET http://localhost:3000/api/health
 http://localhost:3000
 ```
 
-The Angular application communicates with these endpoints through `/api`. During Angular development, the development proxy forwards `/api` requests to the local backend running on port `3000`.
+The Angular application communicates through `/api`.
 
-Using test coverage this commands is used: Atlas-copco-group\frontend\desktop> ng test --code-coverage
+During Angular development, the development proxy forwards `/api` requests to the local backend on port `3000`.
+
+When running the built Angular application inside Electron using the `file:` protocol, the API client communicates directly with:
+
+```text
+http://127.0.0.1:3000/api
+```
+
+## Dashboard Features
+
+### Live Telemetry
+
+The dashboard displays live readings for:
+
+| Metric | Description |
+|---|---|
+| Velocity | Compressor vibration/velocity measurement |
+| Pressure | Compressor pressure |
+| Temperature | Compressor temperature |
+| Flow | Compressor flow rate |
+
+The simulator generates a new reading every second.
+
+### Historical Data
+
+The backend retains the newest **100 samples**.
+
+The frontend polls the backend once per second and updates the dashboard and trend charts without recreating chart instances.
+
+### Trend Charts
+
+Each telemetry metric has an independent line chart.
+
+Chart controls include:
+
+- Zoom In
+- Zoom Out
+- Pan
+- Reset Zoom
+
+Chart tooltips display:
+
+- Timestamp
+- Value
+- Unit
+
+Chart.js and the zoom plugin are loaded on demand.
+
+### Theme
+
+The application supports:
+
+- Light theme
+- Dark theme
+
+Chart colors, grid colors, text colors, and metric colors are adjusted according to the selected theme.
+
+### Unit Conversion
+
+The application supports local unit conversion.
+
+#### Velocity
+
+- `mm/s`
+- `cm/s`
+- `m/s`
+- `km/h`
+- `ft/s`
+
+#### Pressure
+
+- `Pa`
+- `kPa`
+- `mbar`
+- `bar`
+- `psi`
+- `atm`
+
+#### Temperature
+
+- `°C`
+- `°F`
+- `K`
+
+Conversion uses the API's canonical:
+
+```text
+Velocity    → m/s
+Pressure    → bar
+Temperature → °C
+```
+
+Converted values are applied locally to:
+
+- Current readings
+- Charts
+- Historical data
+- CSV export
+- Excel export
+
+No additional API request is required for unit conversion.
+
+## Data Simulation
+
+The backend uses an in-memory telemetry simulator.
+
+The simulator:
+
+1. Generates a timestamped reading every second.
+2. Randomly varies telemetry values by approximately 10%.
+3. Maintains the variation for approximately five cycles.
+4. Gradually returns values toward their baseline over the next five cycles.
+5. Retains the newest 100 samples.
+
+The simulator runs independently from API requests.
+
+No physical compressor hardware is required.
+
+## CSV and Excel Export
+
+The application supports exporting telemetry data to:
+
+- CSV
+- Excel `.xlsx`
+
+Both formats use the same export table structure.
+
+Each measurement is exported as a separate row with:
+
+```text
+Timestamp
+Record type
+Parameter
+Value
+Unit
+Status
+System status
+```
+
+Excel files are generated using **ExcelJS**.
+
+ExcelJS is loaded only when an Excel export is requested to avoid unnecessarily increasing the initial UI bundle.
 
 ## Architecture
 
 ```text
-backend/                 Node.js + Express API
-  src/index.ts           Health and dashboard endpoints
-frontend/desktop/            Angular + Electron desktop application
-  electron/               Electron main, preload, and dev launcher
-  src/                    Angular renderer and telemetry UI
-    app/dashboard/        Lazy-loaded Overview route
-    app/trends/           Lazy-loaded charts and history route
-    app/services/         Shared dashboard data store
-shared/                   Shared workspace packages
+┌─────────────────────────────────────┐
+│          Electron Desktop           │
+│                                     │
+│  ┌───────────────────────────────┐  │
+│  │       Angular Renderer        │  │
+│  │                               │  │
+│  │  Overview                     │  │
+│  │  Trends                       │  │
+│  │  Dashboard Store              │  │
+│  │  Chart.js                     │  │
+│  │  CSV / Excel Export           │  │
+│  └───────────────┬───────────────┘  │
+│                  │ /api              │
+└──────────────────┼──────────────────┘
+                   │
+                   ▼
+        ┌─────────────────────┐
+        │   Node.js / Express │
+        │                     │
+        │ GET /api/dashboard  │
+        │ GET /api/health     │
+        │                     │
+        │ Telemetry Simulator │
+        └─────────────────────┘
 ```
 
-- Angular Router lazy-loads the Overview at `/` and Trends at `/trends`. A root-scoped dashboard store keeps polling, theme, and unit-selection state alive while navigating between routes.
-- The Express service owns `GET /api/health` and `GET /api/dashboard` on port 3000.
-- The in-memory simulator generates a timestamped reading every second, randomly varies values by up to about 10% for five cycles, then gradually returns them to baseline over five cycles. It runs independently of API requests and retains the newest 100 server samples; the renderer polls once per second and plots independent line charts for velocity, pressure, temperature, and flow.
-- Angular renders the dashboard and requests telemetry through `/api`. The Angular development proxy forwards those requests to the local backend. In Electron's built `file:` renderer, the API client calls the local backend URL directly.
-- Electron's main and preload processes are separate from Angular. The window enables context isolation and sandboxing and disables Node integration.
-- CSV and Excel exports use a common timestamped, one-measurement-per-row table. ExcelJS is loaded only when an Excel export is requested, keeping it out of the initial UI bundle.
-- Chart.js and its zoom plugin are loaded on demand. Each metric chart keeps the newest 100 timestamped samples, updates every second, and supports zoom, drag-pan, and reset controls. Tooltips show timestamp, value, and unit; updates animate without recreating chart instances.
+### Angular Routing
 
-## Assumptions And Data Limits
+Angular Router lazy-loads:
 
-- The app is a local, single-workstation tool. The API is expected at `localhost:3000`; no remote service URL or authentication is configured.
-- The backend simulates in-memory sample telemetry. It is not connected to compressor hardware, a database, or persistent storage.
-- Snapshot and history data include velocity, pressure, temperature, and flow.
-- Snapshot and historical sample timestamps are ISO date-time values.
-- Velocity units: `mm/s`, `cm/s`, `m/s`, `km/h`, and `ft/s`. Pressure units: `Pa`, `kPa`, `mbar`, `bar`, `psi`, and `atm`. Temperature units: `°C`, `°F`, and `K`. Conversion uses the API's canonical `m/s`, `bar`, and `°C` values and is applied locally to current readings, charts, history, and exports without another API request.
-- The Electron preview runs the local build but does not package or sign an installer.
+```text
+/          → Overview
+/trends    → Trends
+```
 
-## Source And Generated Files
+A root-scoped dashboard store keeps polling, theme, and unit-selection state alive while navigating between routes.
 
-All application source, workspace manifests, lockfiles, and tests are part of the source tree. Do not include installed dependencies or generated output in a source submission. The root `.gitignore` excludes `node_modules`, Angular caches, `dist`, TypeScript test output, coverage, and Electron release output.
+## Electron Security
+
+The Electron application separates the main process, preload process, and Angular renderer.
+
+Security-related configuration includes:
+
+- Context isolation enabled
+- Sandbox enabled
+- Node integration disabled
+- Preload process separated from the renderer
+
+The Angular renderer does not directly access Node.js APIs.
+
+## Build
+
+Build the backend and Angular renderer:
+
+```bash
+npm run build
+```
+
+## Testing
+
+### Backend Tests
+
+Run backend tests:
+
+```bash
+npm run test:api
+```
+
+### Angular Tests
+
+Run Angular tests:
+
+```bash
+npm --prefix frontend/desktop test -- --watch=false
+```
+
+### Angular Code Coverage
+
+Generate the Angular test coverage report:
+
+```bash
+cd frontend/desktop
+ng test --code-coverage --watch=false
+```
+
+The coverage report is generated under:
+
+```text
+coverage/
+```
+
+Open the generated:
+
+```text
+coverage/index.html
+```
+
+to view:
+
+- Statements
+- Branches
+- Functions
+- Lines
+
+## Electron Preview
+
+To build Angular and open the production build inside Electron:
+
+```bash
+npm --prefix frontend/desktop run electron:preview
+```
+
+The backend must be running separately.
+
+This command runs the local production build in Electron but does **not** create a packaged installer.
+
+## Assumptions and Data Limitations
+
+This project is designed as a local single-workstation demonstration application.
+
+- The API runs on `localhost:3000`.
+- No authentication is configured.
+- No remote service is configured.
+- Telemetry is simulated in memory.
+- No physical compressor hardware is connected.
+- No database is used.
+- No persistent telemetry storage is used.
+- Snapshot and history data contain velocity, pressure, temperature, and flow.
+- Telemetry timestamps are ISO date-time values.
+- The Electron preview does not package or sign an installer.
+
+## Source and Generated Files
+
+Application source code, workspace manifests, lockfiles, configuration, and tests are maintained in the repository.
+
+Generated or machine-specific files should not be committed.
+
+The root `.gitignore` excludes:
+
+```text
+node_modules/
+dist/
+.angular/
+.cache/
+out-tsc/
+coverage/
+release/
+build/
+out/
+.env
+.vscode/
+.idea/
+.azure/
+.github/agents/
+```
+
+`package-lock.json` is intentionally committed so that dependencies can be installed consistently.
+
+## Development Notes
+
+This project demonstrates a complete local telemetry workflow:
+
+```text
+Telemetry Simulation
+        ↓
+Node.js / Express API
+        ↓
+Angular Dashboard Store
+        ↓
+Live Dashboard
+        ↓
+Chart.js Trends
+        ↓
+Unit Conversion
+        ↓
+CSV / Excel Export
+```
+
+The application is structured so that the backend, Angular renderer, Electron shell, shared models, charts, and export functionality remain separated and maintainable.
+
+## Future Improvements
+
+Possible future enhancements include:
+
+- Real compressor/hardware telemetry integration
+- WebSocket-based real-time communication
+- Database-backed historical telemetry
+- User authentication and authorization
+- Multiple compressor support
+- Alarm and notification system
+- Configurable telemetry thresholds
+- Advanced analytics
+- Predictive maintenance
+- Cloud/Azure deployment
+- Docker-based deployment
+- Production Electron packaging and signing
+
+## Repository
+
+**GitHub Repository**
+
+https://github.com/param1995/Atlas-copco-group
+
+## License
+
+This project is intended for demonstration, evaluation, and development purposes.

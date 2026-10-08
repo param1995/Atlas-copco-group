@@ -146,6 +146,11 @@ http://localhost:3000
 
 In another terminal:
 
+cd Atlas-copco-group and first install the npm : 
+npm --prefix frontend/desktop install
+
+after start the angular and electron 
+
 ```bash
 npm --prefix frontend/desktop start
 ```

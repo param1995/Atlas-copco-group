@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Telemetry API (debug)",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 9229,
+      "restart": true,
+      "protocol": "inspector",
+      "localRoot": "${workspaceFolder}/backend",
+      "remoteRoot": "${workspaceFolder}/backend",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/backend/dist/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "preLaunchTask": "telemetry-api: dev"
+    },
+    {
+      "name": "Desktop Dashboard (debug)",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/apps/desktop/src",
+      "preLaunchTask": "desktop-dashboard: dev"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug All Services",
+      "configurations": [
+        "Telemetry API (debug)",
+        "Desktop Dashboard (debug)"
+      ],
+      "preLaunchTask": "debug: start services",
+      "stopAll": true
+    }
+  ]
+}

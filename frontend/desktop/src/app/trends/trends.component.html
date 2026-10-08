@@ -1,0 +1,116 @@
+<div class="dashboard-shell">
+  
+  <main class="workspace">
+    <section class="overview-header trends-page-header" aria-labelledby="trends-title">
+      <div class="trends-heading-copy">
+        <p class="eyebrow">Live telemetry</p>
+        <h1 id="trends-title">Trends</h1>
+      </div>
+      <p class="page-description trends-page-description">One-second readings for the latest 100 samples.</p>
+      <div class="trends-header-actions">
+        <span class="system-status" [class.ok]="store.systemStatus === 'Healthy'" [class.warning]="store.systemStatus === 'Warning'">
+          <span class="status-dot" aria-hidden="true"></span>
+          {{ store.systemStatus === 'Warning' ? 'Attention required' : 'Live updates' }}
+        </span>
+      
+        @if (store.loadError) {
+          <button
+            class="refresh-button"
+            type="button"
+            (click)="store.refreshDashboard()"
+            [disabled]="store.isRefreshing"
+            [attr.aria-busy]="store.isRefreshing"
+          >
+            {{ store.isRefreshing ? 'Updating…' : 'Refresh trends' }}
+          </button>
+        }
+      </div>
+    </section>
+
+    @if (store.loadError) {
+      <section class="state-panel error-state" role="alert">
+        <div>
+          <h2>Telemetry unavailable</h2>
+          <p>{{ store.loadError }}</p>
+        </div>
+        <button class="refresh-button" type="button" (click)="store.refreshDashboard()">Try again</button>
+      </section>
+    } @else {
+      <section class="charts-section" aria-labelledby="charts-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Latest 100 samples</p>
+            <h2 id="charts-heading">Telemetry over time</h2>
+          </div>
+          <span class="section-note">Updates every second</span>
+        </div>
+
+        <div class="chart-grid">
+          @for (metric of store.metrics; track metric.name) {
+            <article class="chart-panel" [class.warning-chart]="metric.tone === 'warning'">
+              <div class="chart-heading">
+                <div>
+                  <h3>{{ metric.name }}</h3>
+                  <p>{{ metric.value }} <span>{{ metric.unit }}</span></p>
+                </div>
+                <span class="sample-count">{{ metric.samples.length }}/100 samples</span>
+              </div>
+              <app-live-trend-chart
+                [metricName]="metric.name"
+                [unit]="metric.unit"
+                [samples]="metric.samples"
+                [theme]="store.theme"
+              />
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="history-section" aria-labelledby="history-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Timestamped readings</p>
+            <h2 id="history-heading">Telemetry history</h2>
+          </div>
+          <span class="section-note">{{ store.trendData.length }} readings</span>
+        </div>
+
+        <div class="table-frame" role="region" aria-label="Recent telemetry readings" tabindex="0">
+          <table class="trend-table">
+            <caption class="visually-hidden">Recent velocity, pressure, temperature, and flow readings</caption>
+            <thead>
+              <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Velocity ({{ store.velocityUnit }})</th>
+                <th scope="col">Pressure ({{ store.pressureUnit }})</th>
+                <th scope="col">Temperature ({{ store.temperatureUnit }})</th>
+                <th scope="col">Flow (L/min)</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of store.trendData; track row.time) {
+                <tr>
+                  <td>{{ row.time }}</td>
+                  <td>{{ row.velocity | number:'1.0-2' }}</td>
+                  <td>{{ row.pressure | number:'1.0-2' }}</td>
+                  <td>{{ row.temperature | number:'1.0-2' }}</td>
+                  <td>{{ row.flow | number:'1.0-2' }}</td>
+                  <td>
+                    <span class="table-status" [class.ok]="row.status === 'Normal'" [class.warning]="row.status === 'Warning'">
+                      {{ row.status }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td class="empty-row" colspan="6">No recent readings available.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  </main>
+</div>

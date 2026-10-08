@@ -1,0 +1,20 @@
+# Node
+node_modules/
+**/dist/
+**/.angular/
+**/.cache/
+**/out-tsc/
+**/coverage/
+**/release/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

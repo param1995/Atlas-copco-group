@@ -1,0 +1,82 @@
+@use './app/dashboard/dashboard.component.scss';
+@use './app/header/header.component.scss';
+@use './app/footer/footer.component.scss';
+
+:root {
+  color-scheme: light;
+  --canvas: #f2f5f2;
+  --surface: #ffffff;
+  --ink: #1d2925;
+  --muted: #66746e;
+  --line: #dce4df;
+  --accent: #176b56;
+  --accent-strong: #105641;
+  --success: #167143;
+  --warning: #a64b21;
+  --warning-surface: #fff5ed;
+  --warning-line: #ebc8ad;
+  --table-header: #f4f6f3;
+  --row-hover: #f8faf8;
+  --focus: #225fba;
+  --theme-track: #e4ebe6;
+  --theme-selected: #ffffff;
+  --theme-selected-text: #155f4b;
+  --theme-selected-shadow: 0 1px 3px rgba(29, 41, 37, 0.18);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --canvas: #141a18;
+  --surface: #1d2622;
+  --ink: #e7eeea;
+  --muted: #a7b5ae;
+  --line: #35433d;
+  --accent: #176b56;
+  --accent-strong: #21866a;
+  --success: #77d69a;
+  --warning: #ffb082;
+  --warning-surface: #38261e;
+  --warning-line: #694936;
+  --table-header: #27332d;
+  --row-hover: #26332c;
+  --focus: #94c4ff;
+  --theme-track: #141a18;
+  --theme-selected: #35433d;
+  --theme-selected-text: #e7eeea;
+  --theme-selected-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: 'Segoe UI Variable', 'Segoe UI', sans-serif;
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+.application-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: var(--canvas);
+}
+
+app-dashboard {
+  display: block;
+  flex: 1 0 auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+.route-content{
+  padding-top: 50px;
+}
+
+button,
+input,
+th,
+td {
+  font: inherit;
+}

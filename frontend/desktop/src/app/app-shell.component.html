@@ -1,0 +1,14 @@
+<div class="application-shell">
+  <app-header
+    [theme]="store.theme"
+    [isLoading]="store.isLoading"
+    (themeChange)="store.setTheme($event)"
+    (refresh)="store.refreshDashboard()"
+  />
+
+  <main class="route-content">
+    <router-outlet />
+  </main>
+
+  <app-footer />
+</div>

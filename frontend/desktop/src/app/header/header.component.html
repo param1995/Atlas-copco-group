@@ -1,0 +1,58 @@
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" routerLink="/" aria-label="Compressor Operations overview">
+      <span class="brand-mark" aria-hidden="true">CO</span>
+      <span>Compressor <strong>Operations</strong></span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Dashboard sections">
+      <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Overview</a>
+      <a class="nav-link" routerLink="/trends" routerLinkActive="active">Trends</a>
+    </nav>
+
+    <div class="toolbar-actions">
+      <div class="theme-switch" role="group" aria-label="Color theme">
+        <button
+          class="theme-option"
+          type="button"
+          [class.selected]="theme === 'light'"
+          [attr.aria-pressed]="theme === 'light'"
+          (click)="themeChange.emit('light')"
+        >
+          Light
+        </button>
+        <button
+          class="theme-option"
+          type="button"
+          [class.selected]="theme === 'dark'"
+          [attr.aria-pressed]="theme === 'dark'"
+          (click)="themeChange.emit('dark')"
+        >
+          Dark
+        </button>
+      </div>
+      @if (showRefresh) {
+        <button
+          class="refresh-button"
+          type="button"
+          (click)="refresh.emit()"
+          [disabled]="isLoading"
+          [attr.aria-busy]="isLoading"
+        >
+          {{ isLoading ? 'Updating…' : 'Refresh data' }}
+        </button>
+      }
+       @if (!showRefresh) {
+        <button
+          class="refresh-button"
+          type="button"
+          (click)="refresh.emit()"
+          [disabled]="isLoading"
+          [attr.aria-busy]="isLoading"
+        >
+          {{ isLoading ? 'Updating…' : 'Refresh trends' }}
+        </button>
+      }
+    </div>
+  </div>
+</header>

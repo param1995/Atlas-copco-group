@@ -1,0 +1,16 @@
+{
+  "name": "compressor-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "backend",
+    "shared/*"
+  ],
+  "scripts": {
+    "build:api": "npm --prefix backend run build",
+    "build:desktop": "npm --prefix apps/desktop run build",
+    "build": "npm run build:api && npm run build:desktop",
+    "test:api": "npm --prefix backend run test"
+  }
+}

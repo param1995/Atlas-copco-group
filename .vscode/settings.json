@@ -1,0 +1,9 @@
+{
+    "chat.editor.preferCopilotHarness": false,
+    "chat.defaultToCopilotHarness": false,
+    "debug.onTaskErrors": "debugAnyway",
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    "chat.disableAIFeatures": true
+}
